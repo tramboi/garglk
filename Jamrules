@@ -80,16 +80,17 @@ switch $(OS)
         # Setting C++ standard version to use for current g++ compilers.
         C++FLAGS = -std=c++11 ;
         GARGLKCCFLAGS = "`$(PKGCONFIG) --cflags`" -fPIC -std=gnu99 ;
-        GARGLKLIBS = "`$(PKGCONFIG) --libs`" -ljpeg -lpng -lz -lrt ;
+        GARGLKLIBS = -L$(MSYSTEM_PREFIX)/lib "`$(PKGCONFIG) --libs`" -ljpeg -lpng -lz -lrt ;
+        GARGLKLIBS += -lfreetype ;
         LINKLIBS = -lz -lm "`$(PKGCONFIG) --libs`" ;
 
-        BASE_INCLUDE_PATH = /mingw64/include ;
+        BASE_INCLUDE_PATH = $(MSYSTEM_PREFIX)/include ;
         GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH) ;
         GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH)/freetype2 ;
         if $(USESDL) = yes
         {
             GARGLKCCFLAGS += -I/$(BASE_INCLUDE_PATH)/SDL ;
-            GARGLKLIBS += -lSDL_mixer -lSDL_sound -lSDL ;
+            GARGLKLIBS += -lSDL_mixer -lSDL ;
         }
 
         if $(STATIC) { LINKLIBS += $(GARGLKLIBS) ; }
