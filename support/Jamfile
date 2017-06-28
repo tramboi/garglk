@@ -41,6 +41,7 @@ if $(USESDL) = yes
         ;
 
     if $(OS) = MINGW   { SubDirCcFlags -DSDL_SOUND_DLL_EXPORTS ; }
+    if $(OS) = MSYS2   { SubDirCcFlags -DSDL_SOUND_DLL_EXPORTS ; }
     if $(OS) = SOLARIS { SubDirCcFlags -I/usr/include/SDL -fPIC ; }
     if $(OS) = MACOSX  { SubDirCcFlags `$(PKGCONFIG) --cflags sdl libpng` -fPIC ; }
 
@@ -58,6 +59,16 @@ if $(USESDL) = yes
             ;
 
         SharedLinkLibrariesOnSharedLibrary SDL_sound : smpeg libvorbisfile-3 ;
+    }
+
+    if $(OS) = MSYS2
+    {
+        SEARCH_SOURCE += [ FDirName $(SUBDIR) sdl ] ;
+
+        SharedLibrary SDL_sound :
+            ogg.c audio_convert.c alt_audio_convert.c extra_rwops.c SDL_sound.c
+            ;
+
     }
 
     if $(OS) = SOLARIS || $(OS) = MACOSX

@@ -85,12 +85,14 @@ switch $(OS)
         LINKLIBS = -lz -lm "`$(PKGCONFIG) --libs`" ;
 
         BASE_INCLUDE_PATH = $(MSYSTEM_PREFIX)/include ;
-        GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH) ;
+        CCFLAGS += -I$(BASE_INCLUDE_PATH) ;
+        CXXFLAGS += -I$(BASE_INCLUDE_PATH) ;
+        GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH) ; # NEcessary ?
         GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH)/freetype2 ;
         if $(USESDL) = yes
         {
             GARGLKCCFLAGS += -I/$(BASE_INCLUDE_PATH)/SDL ;
-            GARGLKLIBS += -lSDL_mixer -lSDL ;
+            GARGLKLIBS += -lSDL_mixer -lSDL_sound -lSDL ;
         }
 
         if $(STATIC) { LINKLIBS += $(GARGLKLIBS) ; }

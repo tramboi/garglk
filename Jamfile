@@ -87,6 +87,12 @@ if $(OS) = MINGW && $(USESDL) = yes
     InstallLib $(LIBDIR) : mikmod.dll ;
 }
 
+if $(OS) = MSYS2 && $(USESDL) = yes
+{
+    SharedLinkLibrariesOnSharedLibrary libgarglk : SDL_sound ;
+    SEARCH_SOURCE += [ FDirName $(TOP) support sdl ] ;
+}
+
 if $(STATIC)
 {
     if $(USEBABEL)
