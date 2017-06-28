@@ -75,7 +75,7 @@ switch $(OS)
         }
 
     case MSYS2 :
-        Echo "OS is MSYS2 (win32) $(CROSS)" ;
+        Echo "OS is MSYS2 (win32)" ;
 
         # Setting C++ standard version to use for current g++ compilers.
         C++FLAGS = -std=c++11 ;
@@ -83,18 +83,17 @@ switch $(OS)
         GARGLKLIBS = "`$(PKGCONFIG) --libs`" -ljpeg -lpng -lz -lrt ;
         LINKLIBS = -lz -lm "`$(PKGCONFIG) --libs`" ;
 
-        BASE_INCLUDE_PATH="/mingw64/include" ;
-        GARGLKCCFLAGS += "-I$(BASE_INCLUDE_PATH)" ;
-        GARGLKCCFLAGS += "-I$(BASE_INCLUDE_PATH)/freetype2" ;
+        BASE_INCLUDE_PATH = /mingw64/include ;
+        GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH) ;
+        GARGLKCCFLAGS += -I$(BASE_INCLUDE_PATH)/freetype2 ;
         if $(USESDL) = yes
         {
-            GARGLKCCFLAGS += "-I/$(BASE_INCLUDE_PATH)/SDL" ;
+            GARGLKCCFLAGS += -I/$(BASE_INCLUDE_PATH)/SDL ;
             GARGLKLIBS += -lSDL_mixer -lSDL_sound -lSDL ;
         }
 
         if $(STATIC) { LINKLIBS += $(GARGLKLIBS) ; }
         else      { SHRLINKLIBS += $(GARGLKLIBS) ; }
-
 
     case LINUX :
         Echo "OS is LINUX ($(GUILIB))" ;
@@ -235,7 +234,13 @@ rule WindRes
     Clean clean : $(<) ;
 }
 
-actions WindRes { $(MINGWARCH)-windres -i $(>) -o $(<) --include-dir=$(>:D) }
+switch $(OS)
+{
+    case MINGW :
+        actions WindRes { $(MINGWARCH)-windres -i $(>) -o $(<) --include-dir=$(>:D) }
+    case MSYS2 :
+        actions WindRes { windres -i $(>) -o $(<) --include-dir=$(>:D) }
+}
 
 #
 # You shouldn't need to touch anything from here on.
